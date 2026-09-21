@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../config/database.php';
 
-class User
+class Categoria
 {
     private $connection;
 
@@ -17,13 +17,13 @@ class User
         $sql = "SELECT
                     id,
                     name,
-                    email,
-                    role,
+                    description,
+                    sort_order,
                     is_active,
                     created_at,
                     updated_at
-                FROM users
-                ORDER BY id DESC";
+                FROM categories
+                ORDER BY sort_order ASC, name ASC";
 
         $consulta = $this->connection->query($sql);
 
@@ -35,12 +35,10 @@ class User
         $sql = "SELECT
                     id,
                     name,
-                    email,
-                    role,
-                    is_active,
-                    created_at,
-                    updated_at
-                FROM users
+                    description,
+                    sort_order,
+                    is_active
+                FROM categories
                 WHERE id = :id";
 
         $consulta = $this->connection->prepare($sql);
@@ -50,32 +48,29 @@ class User
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($name, $email, $password, $role = 'MESERO')
+    public function create($name, $description, $sortOrder = 0)
     {
-        $sql = "INSERT INTO users
-                    (name, email, password, role, is_active, created_at, updated_at)
+        $sql = "INSERT INTO categories
+                    (name, description, sort_order, is_active, created_at, updated_at)
                 VALUES
-                    (:name, :email, :password, :role, 1, NOW(), NOW())";
+                    (:name, :description, :sort_order, 1, NOW(), NOW())";
 
         $consulta = $this->connection->prepare($sql);
 
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
         $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':email', $email);
-        $consulta->bindParam(':password', $passwordHash);
-        $consulta->bindParam(':role', $role);
+        $consulta->bindParam(':description', $description);
+        $consulta->bindParam(':sort_order', $sortOrder, PDO::PARAM_INT);
 
         return $consulta->execute();
     }
 
-    public function update($id, $name, $email, $role, $isActive)
+    public function update($id, $name, $description, $sortOrder, $isActive)
     {
-        $sql = "UPDATE users
+        $sql = "UPDATE categories
                 SET
                     name = :name,
-                    email = :email,
-                    role = :role,
+                    description = :description,
+                    sort_order = :sort_order,
                     is_active = :is_active,
                     updated_at = NOW()
                 WHERE id = :id";
@@ -84,8 +79,8 @@ class User
 
         $consulta->bindParam(':id', $id, PDO::PARAM_INT);
         $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':email', $email);
-        $consulta->bindParam(':role', $role);
+        $consulta->bindParam(':description', $description);
+        $consulta->bindParam(':sort_order', $sortOrder, PDO::PARAM_INT);
         $consulta->bindParam(':is_active', $isActive, PDO::PARAM_INT);
 
         return $consulta->execute();
@@ -93,25 +88,11 @@ class User
 
     public function delete($id)
     {
-        $sql = "DELETE FROM users WHERE id = :id";
+        $sql = "DELETE FROM categories WHERE id = :id";
 
         $consulta = $this->connection->prepare($sql);
         $consulta->bindParam(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
-    }
-
-    public function findByEmail($email)
-    {
-        $sql = "SELECT *
-                FROM users
-                WHERE email = :email
-                LIMIT 1";
-
-        $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':email', $email);
-        $consulta->execute();
-
-        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 }
