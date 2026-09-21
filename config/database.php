@@ -2,11 +2,11 @@
 
 class Database
 {
-    private string $host = 'localhost';
-    private string $port = '3306';
-    private string $database = 'mekatos';
-    private string $username = 'root';
-    private string $password = '';
+    private $host = 'localhost';
+    private $port = '3306';
+    private $database = 'mekatos';
+    private $username = 'root';
+    private $password = '';
 
     private ?PDO $connection = null;
 
