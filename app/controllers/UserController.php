@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../config/database.php';
 
-class Mesa
+class UserController
 {
     private $connection;
 
@@ -83,6 +83,9 @@ class Mesa
         return $consulta->execute();
     }
 
+    
+
+    
     public function update($id, $number, $name, $capacity, $status)
     {
         $sql = "UPDATE restaurant_tables
@@ -104,6 +107,17 @@ class Mesa
 
         return $consulta->execute();
     }
+
+    public function guardar()
+{
+    $id_rol = $_POST['id_rol'];
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $correo = $_POST['correo'];
+    $telefono = $_POST['telefono'];
+    $password = $_POST['password'];
+    $estado = $_POST['estado'];
+}
 
     public function updateStatus($id, $status)
     {

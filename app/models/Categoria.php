@@ -15,83 +15,78 @@ class Categoria
     public function getAll()
     {
         $sql = "SELECT
-                    id,
-                    name,
-                    description,
-                    sort_order,
-                    is_active,
-                    created_at,
-                    updated_at
-                FROM categories
-                ORDER BY sort_order ASC, name ASC";
+                    id_categoria,
+                    nombre,
+                    descripcion,
+                    estado
+                FROM categoria
+                ORDER BY nombre ASC";
 
         $consulta = $this->connection->query($sql);
 
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getById($id)
+    public function getById($id_categoria)
     {
         $sql = "SELECT
-                    id,
-                    name,
-                    description,
-                    sort_order,
-                    is_active
-                FROM categories
-                WHERE id = :id";
+                    id_categoria,
+                    nombre,
+                    descripcion,
+                    estado
+                FROM categoria
+                WHERE id_categoria = :id_categoria";
 
         $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+        $consulta->bindParam(':id_categoria', $id_categoria, PDO::PARAM_INT);
         $consulta->execute();
 
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($name, $description, $sortOrder = 0)
+    public function create($nombre, $descripcion, $estado)
     {
-        $sql = "INSERT INTO categories
-                    (name, description, sort_order, is_active, created_at, updated_at)
+        $sql = "INSERT INTO categoria
+                    (nombre, descripcion, estado)
                 VALUES
-                    (:name, :description, :sort_order, 1, NOW(), NOW())";
+                    (:nombre, :descripcion, :estado)";
 
         $consulta = $this->connection->prepare($sql);
 
-        $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':description', $description);
-        $consulta->bindParam(':sort_order', $sortOrder, PDO::PARAM_INT);
+        $consulta->bindParam(':nombre', $nombre);
+        $consulta->bindParam(':descripcion', $descripcion);
+        $consulta->bindParam(':estado', $estado);
 
         return $consulta->execute();
     }
 
-    public function update($id, $name, $description, $sortOrder, $isActive)
+    public function update($id_categoria, $nombre, $descripcion, $estado)
     {
-        $sql = "UPDATE categories
+        $sql = "UPDATE categoria
                 SET
-                    name = :name,
-                    description = :description,
-                    sort_order = :sort_order,
-                    is_active = :is_active,
-                    updated_at = NOW()
-                WHERE id = :id";
+                    nombre = :nombre,
+                    descripcion = :descripcion,
+                    estado = :estado
+                WHERE id_categoria = :id_categoria";
 
         $consulta = $this->connection->prepare($sql);
 
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-        $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':description', $description);
-        $consulta->bindParam(':sort_order', $sortOrder, PDO::PARAM_INT);
-        $consulta->bindParam(':is_active', $isActive, PDO::PARAM_INT);
+        $consulta->bindParam(':id_categoria', $id_categoria, PDO::PARAM_INT);
+        $consulta->bindParam(':nombre', $nombre);
+        $consulta->bindParam(':descripcion', $descripcion);
+        $consulta->bindParam(':estado', $estado);
 
         return $consulta->execute();
     }
 
-    public function delete($id)
+    public function delete($id_categoria)
     {
-        $sql = "DELETE FROM categories WHERE id = :id";
+        $sql = "DELETE FROM categoria
+                WHERE id_categoria = :id_categoria";
 
         $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $consulta->bindParam(':id_categoria', $id_categoria, PDO::PARAM_INT);
 
         return $consulta->execute();
     }

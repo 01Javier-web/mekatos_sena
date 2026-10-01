@@ -77,6 +77,13 @@ class MesaController
         exit;
     }
 
+    public function guardar()
+{
+    $numero = $_POST['numero'];
+    $capacidad = $_POST['capacidad'];
+    $estado = $_POST['estado'];
+}
+
     public function updateStatus($id)
     {
         $mesa = new Mesa();

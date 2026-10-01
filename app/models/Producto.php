@@ -176,4 +176,9 @@ class Producto
 
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function guardar($nombre, $descripcion, $precio, $estado, $id_categoria){
+        $sql = "INSERT INTO productos (nombre, descripcion, precio, estado, id_categoria, created_at, updated_at)
+                VALUES (:nombre, :descripcion, :precio, :estado, :id_categoria, NOW(), NOW())";
+    }
 }

@@ -90,6 +90,15 @@ class ProductoController
         exit;
     }
 
+    public function guardar()
+    {
+    $id_categoria = $_POST['id_categoria'];
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    $precio = $_POST['precio'];
+    $estado = $_POST['estado'];
+    }
+
     public function toggleAvailability($id)
     {
         $producto = new Producto();
