@@ -1,97 +1,76 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Crear Factura</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Factura</title>
+</head>
 
-    <div>
-        <label for="id_pedido">ID de pedido:</label>
-        <input
-            type="number"
-            id="id_pedido"
-            name="id_pedido"
-            min="1"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="numero_factura">Número de factura:</label>
-        <input
-            type="text"
-            id="numero_factura"
-            name="numero_factura"
-            maxlength="50"
-            required
-        >
-    </div>
+    <h1>Crear Factura</h1>
 
-    <div>
-        <label for="fecha_emision">Fecha de emisión:</label>
-        <input
-            type="datetime-local"
-            id="fecha_emision"
-            name="fecha_emision"
-        >
-    </div>
+    <form method="POST" action="?controller=factura&action=guardar">
 
-    <div>
-        <label for="subtotal">Subtotal:</label>
-        <input
-            type="number"
-            id="subtotal"
-            name="subtotal"
-            step="0.01"
-            min="0"
-            required
-        >
-    </div>
+        <label>ID Pedido:</label>
+        <input type="number" name="id_pedido" required>
 
-    <div>
-        <label for="descuento">Descuento:</label>
-        <input
-            type="number"
-            id="descuento"
-            name="descuento"
-            step="0.01"
-            min="0"
-            value="0"
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="impuesto">Impuesto:</label>
-        <input
-            type="number"
-            id="impuesto"
-            name="impuesto"
-            step="0.01"
-            min="0"
-            value="0"
-        >
-    </div>
+        <label>Número de Factura:</label>
+        <input type="text" name="numero_factura" required>
 
-    <div>
-        <label for="total">Total:</label>
-        <input
-            type="number"
-            id="total"
-            name="total"
-            step="0.01"
-            min="0"
-            required
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="estado">Estado:</label>
-        <select id="estado" name="estado">
+        <label>Fecha de Emisión:</label>
+        <input type="datetime-local" name="fecha_emision" required>
+
+        <br><br>
+
+        <label>Subtotal:</label>
+        <input type="number" name="subtotal" step="0.01" required>
+
+        <br><br>
+
+        <label>Descuento:</label>
+        <input type="number" name="descuento" step="0.01" value="0">
+
+        <br><br>
+
+        <label>Impuesto:</label>
+        <input type="number" name="impuesto" step="0.01" value="0">
+
+        <br><br>
+
+        <label>Total:</label>
+        <input type="number" name="total" step="0.01" required>
+
+        <br><br>
+
+        <label>Estado:</label>
+
+        <select name="estado">
+
             <option value="Pendiente">Pendiente</option>
             <option value="Pagada">Pagada</option>
             <option value="Anulada">Anulada</option>
+
         </select>
-    </div>
 
-    <div>
-        <button type="submit">Guardar Factura</button>
-    </div>
+        <br><br>
 
-</form>
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=factura&action=index">
+        Ver facturas
+    </a>
+
+</body>
+
+</html>

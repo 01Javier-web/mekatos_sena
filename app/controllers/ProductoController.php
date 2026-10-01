@@ -1,130 +1,48 @@
 <?php
 
-require_once __DIR__ . '/../Models/Producto.php';
-require_once __DIR__ . '/../Models/Categoria.php';
+require_once __DIR__ . '/../models/Producto.php';
 
 class ProductoController
 {
-    public function index()
+    private $model;
+
+    public function __construct()
     {
-        $producto = new Producto();
-
-        $productos = $producto->getAll();
-
-        require_once __DIR__ . '/../Views/producto/index.php';
+        $this->model = new Producto();
     }
 
-    public function show($id)
+    public function index()
     {
-        $producto = new Producto();
+        $productos = $this->model->getAll();
 
-        $productoData = $producto->getById($id);
-
-        require_once __DIR__ . '/../Views/producto/show.php';
+        require_once __DIR__ . '/../views/Producto/index.php';
     }
 
     public function create()
     {
-        $categoria = new Categoria();
-
-        $categorias = $categoria->getAll();
-
-        require_once __DIR__ . '/../Views/producto/create.php';
-    }
-
-    public function store()
-    {
-        $producto = new Producto();
-
-        $categoryId = $_POST['category_id'];
-        $name = $_POST['name'];
-        $description = $_POST['description'] ?? '';
-        $price = $_POST['price'];
-        $imagePath = $_POST['image_path'] ?? null;
-
-        $producto->create(
-            $categoryId,
-            $name,
-            $description,
-            $price,
-            $imagePath
-        );
-
-        header('Location: /productos');
-        exit;
-    }
-
-    public function edit($id)
-    {
-        $producto = new Producto();
-        $categoria = new Categoria();
-
-        $productoData = $producto->getById($id);
-        $categorias = $categoria->getAll();
-
-        require_once __DIR__ . '/../Views/producto/edit.php';
-    }
-
-    public function update($id)
-    {
-        $producto = new Producto();
-
-        $categoryId = $_POST['category_id'];
-        $name = $_POST['name'];
-        $description = $_POST['description'] ?? '';
-        $price = $_POST['price'];
-        $imagePath = $_POST['image_path'] ?? null;
-        $isAvailable = $_POST['is_available'] ?? 0;
-
-        $producto->update(
-            $id,
-            $categoryId,
-            $name,
-            $description,
-            $price,
-            $imagePath,
-            $isAvailable
-        );
-
-        header('Location: /productos');
-        exit;
+        require_once __DIR__ . '/../views/Producto/create.php';
     }
 
     public function guardar()
     {
-    $id_categoria = $_POST['id_categoria'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $precio = $_POST['precio'];
-    $estado = $_POST['estado'];
-    }
+        $id_categoria = $_POST['id_categoria'];
+        $nombre = $_POST['nombre'];
+        $descripcion = $_POST['descripcion'];
+        $precio = $_POST['precio'];
+        $estado = $_POST['estado'];
 
-    public function toggleAvailability($id)
-    {
-        $producto = new Producto();
+        $resultado = $this->model->create(
+            $id_categoria,
+            $nombre,
+            $descripcion,
+            $precio,
+            $estado
+        );
 
-        $productoData = $producto->getById($id);
-
-        if ($productoData) {
-            $newStatus = $productoData['is_available'] ? 0 : 1;
-
-            $producto->updateAvailability(
-                $id,
-                $newStatus
-            );
+        if ($resultado) {
+            $this->index();
+        } else {
+            echo "Error al guardar el producto";
         }
-
-        header('Location: /productos');
-        exit;
-    }
-
-    public function delete($id)
-    {
-        $producto = new Producto();
-
-        $producto->delete($id);
-
-        header('Location: /productos');
-        exit;
     }
 }

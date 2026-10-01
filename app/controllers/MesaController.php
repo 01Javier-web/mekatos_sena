@@ -1,111 +1,44 @@
 <?php
 
-require_once __DIR__ . '/../Models/Mesa.php';
+require_once __DIR__ . '/../models/Mesa.php';
 
 class MesaController
 {
-    public function index()
+    private $model;
+
+    public function __construct()
     {
-        $mesa = new Mesa();
-
-        $mesas = $mesa->getAll();
-
-        require_once __DIR__ . '/../Views/mesa/index.php';
+        $this->model = new Mesa();
     }
 
-    public function show($id)
+    public function index()
     {
-        $mesa = new Mesa();
+        $mesas = $this->model->getAll();
 
-        $mesaData = $mesa->getById($id);
-
-        require_once __DIR__ . '/../Views/mesa/show.php';
+        require_once __DIR__ . '/../views/Mesa/index.php';
     }
 
     public function create()
     {
-        require_once __DIR__ . '/../Views/mesa/create.php';
-    }
-
-    public function store()
-    {
-        $mesa = new Mesa();
-
-        $number = $_POST['number'];
-        $name = $_POST['name'] ?? '';
-        $capacity = $_POST['capacity'] ?? null;
-        $qrToken = bin2hex(random_bytes(16));
-
-        $mesa->create(
-            $number,
-            $name,
-            $capacity,
-            $qrToken
-        );
-
-        header('Location: /mesas');
-        exit;
-    }
-
-    public function edit($id)
-    {
-        $mesa = new Mesa();
-
-        $mesaData = $mesa->getById($id);
-
-        require_once __DIR__ . '/../Views/mesa/edit.php';
-    }
-
-    public function update($id)
-    {
-        $mesa = new Mesa();
-
-        $number = $_POST['number'];
-        $name = $_POST['name'] ?? '';
-        $capacity = $_POST['capacity'] ?? null;
-        $status = $_POST['status'];
-
-        $mesa->update(
-            $id,
-            $number,
-            $name,
-            $capacity,
-            $status
-        );
-
-        header('Location: /mesas');
-        exit;
+        require_once __DIR__ . '/../views/Mesa/create.php';
     }
 
     public function guardar()
-{
-    $numero = $_POST['numero'];
-    $capacidad = $_POST['capacidad'];
-    $estado = $_POST['estado'];
-}
-
-    public function updateStatus($id)
     {
-        $mesa = new Mesa();
+        $numero = $_POST['numero'];
+        $capacidad = $_POST['capacidad'];
+        $estado = $_POST['estado'];
 
-        $status = $_POST['status'];
-
-        $mesa->updateStatus(
-            $id,
-            $status
+        $resultado = $this->model->create(
+            $numero,
+            $capacidad,
+            $estado
         );
 
-        header('Location: /mesas');
-        exit;
-    }
-
-    public function delete($id)
-    {
-        $mesa = new Mesa();
-
-        $mesa->delete($id);
-
-        header('Location: /mesas');
-        exit;
+        if ($resultado) {
+            $this->index();
+        } else {
+            echo "Error al guardar la mesa";
+        }
     }
 }

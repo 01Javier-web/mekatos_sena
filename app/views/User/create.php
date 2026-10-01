@@ -1,81 +1,70 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Crear Usuario</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Usuario</title>
+</head>
 
-    <div>
-        <label for="id_rol">ID de rol:</label>
-        <input
-            type="number"
-            id="id_rol"
-            name="id_rol"
-            min="1"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="nombre">Nombre:</label>
-        <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            maxlength="100"
-            required
-        >
-    </div>
+    <h1>Crear Usuario</h1>
 
-    <div>
-        <label for="apellido">Apellido:</label>
-        <input
-            type="text"
-            id="apellido"
-            name="apellido"
-            maxlength="100"
-        >
-    </div>
+    <form method="POST" action="?controller=user&action=guardar">
 
-    <div>
-        <label for="correo">Correo:</label>
-        <input
-            type="email"
-            id="correo"
-            name="correo"
-            maxlength="150"
-            required
-        >
-    </div>
+        <label>ID Rol:</label>
+        <input type="number" name="id_rol" required>
 
-    <div>
-        <label for="telefono">Teléfono:</label>
-        <input
-            type="text"
-            id="telefono"
-            name="telefono"
-            maxlength="20"
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="password">Contraseña:</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            maxlength="255"
-            required
-        >
-    </div>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
 
-    <div>
-        <label for="estado">Estado:</label>
-        <select id="estado" name="estado">
+        <br><br>
+
+        <label>Apellido:</label>
+        <input type="text" name="apellido" required>
+
+        <br><br>
+
+        <label>Correo:</label>
+        <input type="email" name="correo" required>
+
+        <br><br>
+
+        <label>Teléfono:</label>
+        <input type="text" name="telefono">
+
+        <br><br>
+
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
+
+        <br><br>
+
+        <label>Estado:</label>
+
+        <select name="estado">
+
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
+
         </select>
-    </div>
 
-    <div>
-        <button type="submit">Guardar Usuario</button>
-    </div>
+        <br><br>
 
-</form>
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=user&action=index">
+        Ver usuarios
+    </a>
+
+</body>
+
+</html>

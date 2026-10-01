@@ -15,103 +15,41 @@ class User
     public function getAll()
     {
         $sql = "SELECT
-                    id,
-                    name,
-                    email,
-                    role,
-                    is_active,
-                    created_at,
-                    updated_at
-                FROM users
-                ORDER BY id DESC";
+                    u.id_usuario,
+                    u.id_rol,
+                    r.nombre AS rol_nombre,
+                    u.nombre,
+                    u.apellido,
+                    u.correo,
+                    u.telefono,
+                    u.estado
+                FROM usuario AS u
+                INNER JOIN rol AS r
+                    ON u.id_rol = r.id_rol
+                ORDER BY u.id_usuario DESC";
 
         $consulta = $this->connection->query($sql);
 
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getById($id)
+    public function create($id_rol, $nombre, $apellido, $correo, $telefono, $password, $estado)
     {
-        $sql = "SELECT
-                    id,
-                    name,
-                    email,
-                    role,
-                    is_active,
-                    created_at,
-                    updated_at
-                FROM users
-                WHERE id = :id";
-
-        $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-        $consulta->execute();
-
-        return $consulta->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function create($name, $email, $password, $role = 'MESERO')
-    {
-        $sql = "INSERT INTO users
-                    (name, email, password, role, is_active, created_at, updated_at)
+        $sql = "INSERT INTO usuario
+                    (id_rol, nombre, apellido, correo, telefono, password, estado)
                 VALUES
-                    (:name, :email, :password, :role, 1, NOW(), NOW())";
+                    (:id_rol, :nombre, :apellido, :correo, :telefono, :password, :estado)";
 
         $consulta = $this->connection->prepare($sql);
 
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-        $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':email', $email);
-        $consulta->bindParam(':password', $passwordHash);
-        $consulta->bindParam(':role', $role);
+        $consulta->bindParam(':id_rol', $id_rol);
+        $consulta->bindParam(':nombre', $nombre);
+        $consulta->bindParam(':apellido', $apellido);
+        $consulta->bindParam(':correo', $correo);
+        $consulta->bindParam(':telefono', $telefono);
+        $consulta->bindParam(':password', $password);
+        $consulta->bindParam(':estado', $estado);
 
         return $consulta->execute();
-    }
-
-    public function update($id, $name, $email, $role, $isActive)
-    {
-        $sql = "UPDATE users
-                SET
-                    name = :name,
-                    email = :email,
-                    role = :role,
-                    is_active = :is_active,
-                    updated_at = NOW()
-                WHERE id = :id";
-
-        $consulta = $this->connection->prepare($sql);
-
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-        $consulta->bindParam(':name', $name);
-        $consulta->bindParam(':email', $email);
-        $consulta->bindParam(':role', $role);
-        $consulta->bindParam(':is_active', $isActive, PDO::PARAM_INT);
-
-        return $consulta->execute();
-    }
-
-    public function delete($id)
-    {
-        $sql = "DELETE FROM users WHERE id = :id";
-
-        $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
-
-        return $consulta->execute();
-    }
-
-    public function findByEmail($email)
-    {
-        $sql = "SELECT *
-                FROM users
-                WHERE email = :email
-                LIMIT 1";
-
-        $consulta = $this->connection->prepare($sql);
-        $consulta->bindParam(':email', $email);
-        $consulta->execute();
-
-        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 }

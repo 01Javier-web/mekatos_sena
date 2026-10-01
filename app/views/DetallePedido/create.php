@@ -1,75 +1,59 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Agregar Detalle al Pedido</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Detalle de Pedido</title>
+</head>
 
-    <div>
-        <label for="id_pedido">ID de pedido:</label>
-        <input
-            type="number"
-            id="id_pedido"
-            name="id_pedido"
-            min="1"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="id_producto">ID de producto:</label>
-        <input
-            type="number"
-            id="id_producto"
-            name="id_producto"
-            min="1"
-            required
-        >
-    </div>
+    <h1>Crear Detalle de Pedido</h1>
 
-    <div>
-        <label for="cantidad">Cantidad:</label>
-        <input
-            type="number"
-            id="cantidad"
-            name="cantidad"
-            min="1"
-            required
-        >
-    </div>
+    <form method="POST" action="?controller=detalle_pedido&action=guardar">
 
-    <div>
-        <label for="precio_unitario">Precio unitario:</label>
-        <input
-            type="number"
-            id="precio_unitario"
-            name="precio_unitario"
-            step="0.01"
-            min="0"
-            required
-        >
-    </div>
+        <label>ID Pedido:</label>
+        <input type="number" name="id_pedido" required>
 
-    <div>
-        <label for="subtotal">Subtotal:</label>
-        <input
-            type="number"
-            id="subtotal"
-            name="subtotal"
-            step="0.01"
-            min="0"
-            required
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="observacion">Observación:</label>
-        <textarea
-            id="observacion"
-            name="observacion"
-            maxlength="255"
-        ></textarea>
-    </div>
+        <label>ID Producto:</label>
+        <input type="number" name="id_producto" required>
 
-    <div>
-        <button type="submit">Guardar Detalle</button>
-    </div>
+        <br><br>
 
-</form>
+        <label>Cantidad:</label>
+        <input type="number" name="cantidad" required>
+
+        <br><br>
+
+        <label>Precio Unitario:</label>
+        <input type="number" name="precio_unitario" step="0.01" required>
+
+        <br><br>
+
+        <label>Subtotal:</label>
+        <input type="number" name="subtotal" step="0.01" required>
+
+        <br><br>
+
+        <label>Observación:</label>
+        <input type="text" name="observacion">
+
+        <br><br>
+
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=detalle_pedido&action=index">
+        Ver detalles
+    </a>
+
+</body>
+
+</html>

@@ -1,96 +1,69 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Crear Pedido</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Pedido</title>
+</head>
 
-    <div>
-        <label for="id_mesa">ID de mesa:</label>
-        <input
-            type="number"
-            id="id_mesa"
-            name="id_mesa"
-            min="1"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="id_usuario">ID de usuario:</label>
-        <input
-            type="number"
-            id="id_usuario"
-            name="id_usuario"
-            min="1"
-            required
-        >
-    </div>
+    <h1>Crear Pedido</h1>
 
-    <div>
-        <label for="id_estado">ID de estado:</label>
-        <input
-            type="number"
-            id="id_estado"
-            name="id_estado"
-            min="1"
-            required
-        >
-    </div>
+    <form method="POST" action="?controller=pedido&action=guardar">
 
-    <div>
-        <label for="fecha_pedido">Fecha del pedido:</label>
-        <input
-            type="datetime-local"
-            id="fecha_pedido"
-            name="fecha_pedido"
-        >
-    </div>
+        <label>ID Mesa:</label>
+        <input type="number" name="id_mesa" required>
 
-    <div>
-        <label for="subtotal">Subtotal:</label>
-        <input
-            type="number"
-            id="subtotal"
-            name="subtotal"
-            step="0.01"
-            min="0"
-            value="0"
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="descuento">Descuento:</label>
-        <input
-            type="number"
-            id="descuento"
-            name="descuento"
-            step="0.01"
-            min="0"
-            value="0"
-        >
-    </div>
+        <label>ID Usuario:</label>
+        <input type="number" name="id_usuario" required>
 
-    <div>
-        <label for="total">Total:</label>
-        <input
-            type="number"
-            id="total"
-            name="total"
-            step="0.01"
-            min="0"
-            value="0"
-        >
-    </div>
+        <br><br>
 
-    <div>
-        <label for="observaciones">Observaciones:</label>
-        <textarea
-            id="observaciones"
-            name="observaciones"
-            maxlength="255"
-        ></textarea>
-    </div>
+        <label>ID Estado:</label>
+        <input type="number" name="id_estado" required>
 
-    <div>
-        <button type="submit">Guardar Pedido</button>
-    </div>
+        <br><br>
 
-</form>
+        <label>Fecha del Pedido:</label>
+        <input type="datetime-local" name="fecha_pedido" required>
+
+        <br><br>
+
+        <label>Subtotal:</label>
+        <input type="number" name="subtotal" step="0.01" required>
+
+        <br><br>
+
+        <label>Descuento:</label>
+        <input type="number" name="descuento" step="0.01" value="0">
+
+        <br><br>
+
+        <label>Total:</label>
+        <input type="number" name="total" step="0.01" required>
+
+        <br><br>
+
+        <label>Observaciones:</label>
+        <input type="text" name="observaciones">
+
+        <br><br>
+
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=pedido&action=index">
+        Ver pedidos
+    </a>
+
+</body>
+
+</html>

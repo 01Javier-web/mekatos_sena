@@ -1,60 +1,60 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Crear Producto</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Producto</title>
+</head>
 
-    <div>
-        <label for="id_categoria">ID de categoría:</label>
-        <input
-            type="number"
-            id="id_categoria"
-            name="id_categoria"
-            min="1"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="nombre">Nombre:</label>
-        <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            maxlength="100"
-            required
-        >
-    </div>
+    <h1>Crear Producto</h1>
 
-    <div>
-        <label for="descripcion">Descripción:</label>
-        <textarea
-            id="descripcion"
-            name="descripcion"
-            maxlength="255"
-        ></textarea>
-    </div>
+    <form method="POST" action="?controller=producto&action=guardar">
 
-    <div>
-        <label for="precio">Precio:</label>
-        <input
-            type="number"
-            id="precio"
-            name="precio"
-            step="0.01"
-            min="0"
-            required
-        >
-    </div>
+        <label>ID Categoría:</label>
+        <input type="number" name="id_categoria" required>
 
-    <div>
-        <label for="estado">Estado:</label>
-        <select id="estado" name="estado">
+        <br><br>
+
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <br><br>
+
+        <label>Descripción:</label>
+        <input type="text" name="descripcion">
+
+        <br><br>
+
+        <label>Precio:</label>
+        <input type="number" name="precio" step="0.01" required>
+
+        <br><br>
+
+        <label>Estado:</label>
+
+        <select name="estado">
+
             <option value="Disponible">Disponible</option>
             <option value="No disponible">No disponible</option>
+
         </select>
-    </div>
 
-    <div>
-        <button type="submit">Guardar Producto</button>
-    </div>
+        <br><br>
 
-</form>
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=producto&action=index">
+        Ver productos
+    </a>
+
+</body>
+
+</html>

@@ -1,29 +1,39 @@
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="es">
 
-    <h2>Crear Rol</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Rol</title>
+</head>
 
-    <div>
-        <label for="nombre">Nombre:</label>
-        <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            maxlength="50"
-            required
-        >
-    </div>
+<body>
 
-    <div>
-        <label for="descripcion">Descripción:</label>
-        <textarea
-            id="descripcion"
-            name="descripcion"
-            maxlength="255"
-        ></textarea>
-    </div>
+    <h1>Crear Rol</h1>
 
-    <div>
-        <button type="submit">Guardar Rol</button>
-    </div>
+    <form method="POST" action="?controller=rol&action=guardar">
 
-</form>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <br><br>
+
+        <label>Descripción:</label>
+        <input type="text" name="descripcion">
+
+        <br><br>
+
+        <button type="submit">
+            Guardar
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="?controller=rol&action=index">
+        Ver roles
+    </a>
+
+</body>
+
+</html>
