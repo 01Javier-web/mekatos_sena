@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__ . '/../models/Rol.php';
@@ -25,8 +26,18 @@ class RolController
 
     public function guardar()
     {
-        $nombre = $_POST['nombre'];
-        $descripcion = $_POST['descripcion'];
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        $descripcion = trim($_POST['descripcion'] ?? '');
+
+        if ($nombre === '') {
+            echo 'El nombre del rol es obligatorio.';
+            return;
+        }
 
         $resultado = $this->model->create(
             $nombre,
@@ -34,9 +45,76 @@ class RolController
         );
 
         if ($resultado) {
-            $this->index();
-        } else {
-            echo "Error al guardar el rol";
+            header('Location: ?controller=rol&action=index');
+            exit;
         }
+
+        echo 'Error al guardar el rol.';
+    }
+
+    public function edit()
+    {
+        $id = filter_var(
+            $_GET['id'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del rol no es válido.';
+            return;
+        }
+
+        $rol = $this->model->getById($id);
+
+        if (!$rol) {
+            echo 'No se encontró el rol solicitado.';
+            return;
+        }
+
+        require_once __DIR__ . '/../views/Rol/edit.php';
+    }
+
+    public function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_rol'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $nombre = trim($_POST['nombre'] ?? '');
+        $descripcion = trim($_POST['descripcion'] ?? '');
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del rol no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró el rol que deseas actualizar.';
+            return;
+        }
+
+        if ($nombre === '') {
+            echo 'El nombre del rol es obligatorio.';
+            return;
+        }
+
+        $resultado = $this->model->update(
+            $id,
+            $nombre,
+            $descripcion
+        );
+
+        if ($resultado) {
+            header('Location: ?controller=rol&action=index');
+            exit;
+        }
+
+        echo 'Error al actualizar el rol.';
     }
 }

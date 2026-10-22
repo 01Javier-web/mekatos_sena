@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__ . '/../../config/database.php';
@@ -34,11 +35,34 @@ class Pedido
                     ON p.id_usuario = u.id_usuario
                 INNER JOIN estado_pedido AS e
                     ON p.id_estado = e.id_estado
-                ORDER BY p.id_pedido DESC";
+                ORDER BY p.id_pedido ASC";
 
         $consulta = $this->connection->query($sql);
 
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getById($id)
+    {
+        $sql = "SELECT
+                    id_pedido,
+                    id_mesa,
+                    id_usuario,
+                    id_estado,
+                    fecha_pedido,
+                    subtotal,
+                    descuento,
+                    total,
+                    observaciones
+                FROM pedido
+                WHERE id_pedido = :id
+                LIMIT 1";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
     public function create(
@@ -76,14 +100,52 @@ class Pedido
 
         $consulta = $this->connection->prepare($sql);
 
-        $consulta->bindParam(':id_mesa', $id_mesa);
-        $consulta->bindParam(':id_usuario', $id_usuario);
-        $consulta->bindParam(':id_estado', $id_estado);
-        $consulta->bindParam(':fecha_pedido', $fecha_pedido);
-        $consulta->bindParam(':subtotal', $subtotal);
-        $consulta->bindParam(':descuento', $descuento);
-        $consulta->bindParam(':total', $total);
-        $consulta->bindParam(':observaciones', $observaciones);
+        $consulta->bindValue(':id_mesa', $id_mesa, PDO::PARAM_INT);
+        $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $consulta->bindValue(':id_estado', $id_estado, PDO::PARAM_INT);
+        $consulta->bindValue(':fecha_pedido', $fecha_pedido);
+        $consulta->bindValue(':subtotal', $subtotal);
+        $consulta->bindValue(':descuento', $descuento);
+        $consulta->bindValue(':total', $total);
+        $consulta->bindValue(':observaciones', $observaciones);
+
+        return $consulta->execute();
+    }
+
+    public function update(
+        $id,
+        $id_mesa,
+        $id_usuario,
+        $id_estado,
+        $fecha_pedido,
+        $subtotal,
+        $descuento,
+        $total,
+        $observaciones
+    ) {
+        $sql = "UPDATE pedido
+                SET
+                    id_mesa = :id_mesa,
+                    id_usuario = :id_usuario,
+                    id_estado = :id_estado,
+                    fecha_pedido = :fecha_pedido,
+                    subtotal = :subtotal,
+                    descuento = :descuento,
+                    total = :total,
+                    observaciones = :observaciones
+                WHERE id_pedido = :id";
+
+        $consulta = $this->connection->prepare($sql);
+
+        $consulta->bindValue(':id_mesa', $id_mesa, PDO::PARAM_INT);
+        $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $consulta->bindValue(':id_estado', $id_estado, PDO::PARAM_INT);
+        $consulta->bindValue(':fecha_pedido', $fecha_pedido);
+        $consulta->bindValue(':subtotal', $subtotal);
+        $consulta->bindValue(':descuento', $descuento);
+        $consulta->bindValue(':total', $total);
+        $consulta->bindValue(':observaciones', $observaciones);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
     }

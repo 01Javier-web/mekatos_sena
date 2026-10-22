@@ -1,25 +1,81 @@
-<table border="1">
 
-    <tr>
-        <th>ID</th>
-        <th>Categoría</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Estado</th>
-    </tr>
+<!DOCTYPE html>
+<html lang="es">
 
-    <?php foreach (($productos ?? []) as $producto): ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesas</title>
+</head>
 
-        <tr>
-            <td><?= $producto['id_producto'] ?></td>
-            <td><?= $producto['categoria_nombre'] ?></td>
-            <td><?= $producto['nombre'] ?></td>
-            <td><?= $producto['descripcion'] ?></td>
-            <td><?= $producto['precio'] ?></td>
-            <td><?= $producto['estado'] ?></td>
-        </tr>
+<body>
 
-    <?php endforeach; ?>
+    <h1>Lista de Mesas</h1>
 
-</table>
+    <a href="?controller=mesa&action=create">
+        Crear mesa
+    </a>
+
+    <br><br>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Número</th>
+                <th>Capacidad</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php $mesas = $mesas ?? []; ?>
+
+            <?php if ($mesas): ?>
+
+                <?php foreach ($mesas as $mesa): ?>
+
+                    <tr>
+                        <td>
+                            <?= htmlspecialchars((string) ($mesa['id_mesa'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars((string) ($mesa['numero'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars((string) ($mesa['capacidad'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars((string) ($mesa['estado'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        </td>
+
+                        <td>
+                            <a href="?controller=mesa&action=edit&id=<?= urlencode((string) ($mesa['id_mesa'] ?? '')) ?>">
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+
+                <?php endforeach; ?>
+
+            <?php else: ?>
+
+                <tr>
+                    <td colspan="5">No hay mesas registradas.</td>
+                </tr>
+
+            <?php endif; ?>
+
+        </tbody>
+
+    </table>
+
+</body>
+
+</html>

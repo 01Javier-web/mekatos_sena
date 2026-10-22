@@ -25,7 +25,7 @@ class Factura
                     f.total,
                     f.estado
                 FROM factura AS f
-                ORDER BY f.id_factura DESC";
+                ORDER BY f.id_factura ASC";
 
         $consulta = $this->connection->query($sql);
 

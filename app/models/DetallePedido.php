@@ -26,7 +26,7 @@ class DetallePedido
                 FROM detalle_pedido AS d
                 INNER JOIN producto AS p
                     ON d.id_producto = p.id_producto
-                ORDER BY d.id_detalle DESC";
+                ORDER BY d.id_detalle ASC";
 
         $consulta = $this->connection->query($sql);
 

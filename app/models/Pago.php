@@ -29,7 +29,7 @@ class Pago
                     ON p.id_factura = f.id_factura
                 INNER JOIN metodo_pago AS m
                     ON p.id_metodo_pago = m.id_metodo_pago
-                ORDER BY p.id_pago DESC";
+                ORDER BY p.id_pago ASC";
 
         $consulta = $this->connection->query($sql);
 
