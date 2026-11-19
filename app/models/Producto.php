@@ -13,6 +13,7 @@ class Producto
         $this->connection = $database->connect();
     }
 
+    // Consultar todos los productos.
     public function getAll()
     {
         $sql = "SELECT
@@ -33,9 +34,16 @@ class Producto
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar un producto por su ID.
     public function getById($id)
     {
-        $sql = "SELECT *
+        $sql = "SELECT
+                    id_producto,
+                    id_categoria,
+                    nombre,
+                    descripcion,
+                    precio,
+                    estado
                 FROM producto
                 WHERE id_producto = :id
                 LIMIT 1";
@@ -47,7 +55,8 @@ class Producto
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create(
+    // Crear un producto.
+    public function crear(
         $id_categoria,
         $nombre,
         $descripcion,
@@ -73,7 +82,7 @@ class Producto
 
         $consulta = $this->connection->prepare($sql);
 
-        $consulta->bindValue(':id_categoria', $id_categoria);
+        $consulta->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
         $consulta->bindValue(':nombre', $nombre);
         $consulta->bindValue(':descripcion', $descripcion);
         $consulta->bindValue(':precio', $precio);
@@ -82,7 +91,8 @@ class Producto
         return $consulta->execute();
     }
 
-    public function update(
+    // Actualizar un producto.
+    public function actualizar(
         $id,
         $id_categoria,
         $nombre,
@@ -101,7 +111,7 @@ class Producto
 
         $consulta = $this->connection->prepare($sql);
 
-        $consulta->bindValue(':id_categoria', $id_categoria);
+        $consulta->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
         $consulta->bindValue(':nombre', $nombre);
         $consulta->bindValue(':descripcion', $descripcion);
         $consulta->bindValue(':precio', $precio);
@@ -109,5 +119,64 @@ class Producto
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
+    }
+
+    // Eliminar un producto si no tiene detalles de pedidos asociados.
+    public function eliminar($id)
+    {
+        $sqlVerificar = "SELECT COUNT(*)
+                         FROM detalle_pedido
+                         WHERE id_producto = :id";
+
+        $consultaVerificar = $this->connection->prepare($sqlVerificar);
+        $consultaVerificar->bindValue(':id', $id, PDO::PARAM_INT);
+        $consultaVerificar->execute();
+
+        if ((int) $consultaVerificar->fetchColumn() > 0) {
+            return false;
+        }
+
+        $sql = "DELETE FROM producto
+                WHERE id_producto = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad temporal con el código anterior.
+    public function create(
+        $id_categoria,
+        $nombre,
+        $descripcion,
+        $precio,
+        $estado
+    ) {
+        return $this->crear(
+            $id_categoria,
+            $nombre,
+            $descripcion,
+            $precio,
+            $estado
+        );
+    }
+
+    public function update(
+        $id,
+        $id_categoria,
+        $nombre,
+        $descripcion,
+        $precio,
+        $estado
+    ) {
+        return $this->actualizar(
+            $id,
+            $id_categoria,
+            $nombre,
+            $descripcion,
+            $precio,
+            $estado
+        );
     }
 }

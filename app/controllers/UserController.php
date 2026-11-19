@@ -15,6 +15,7 @@ class UserController
         $this->modeloRol = new Rol();
     }
 
+    // Mostrar todos los usuarios.
     public function index()
     {
         $usuarios = $this->model->getAll();
@@ -22,13 +23,15 @@ class UserController
         require_once __DIR__ . '/../views/User/index.php';
     }
 
-    public function create()
+    // Mostrar formulario de creación.
+    public function crear()
     {
         $roles = $this->modeloRol->getAll();
 
         require_once __DIR__ . '/../views/User/create.php';
     }
 
+    // Guardar un nuevo usuario.
     public function guardar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -61,7 +64,7 @@ class UserController
             return;
         }
 
-        $resultado = $this->model->create(
+        $resultado = $this->model->crear(
             $id_rol,
             $nombre,
             $apellido,
@@ -79,7 +82,8 @@ class UserController
         echo 'Error al guardar el usuario.';
     }
 
-    public function edit()
+    // Mostrar formulario de edición.
+    public function editar()
     {
         $id = filter_var(
             $_GET['id'] ?? '',
@@ -100,10 +104,11 @@ class UserController
 
         $roles = $this->modeloRol->getAll();
 
-        require_once __DIR__ . '/../views/User/edit.php';
+        require_once __DIR__ . '/../views/User/editar.php';
     }
 
-    public function update()
+    // Actualizar un usuario.
+    public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->index();
@@ -149,7 +154,7 @@ class UserController
             return;
         }
 
-        $resultado = $this->model->update(
+        $resultado = $this->model->actualizar(
             $id,
             $id_rol,
             $nombre,
@@ -166,5 +171,58 @@ class UserController
         }
 
         echo 'Error al actualizar el usuario.';
+    }
+
+    // Eliminar un usuario.
+    public function eliminar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_usuario'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del usuario no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró el usuario que deseas eliminar.';
+            return;
+        }
+
+        try {
+            $resultado = $this->model->eliminar($id);
+
+            if ($resultado) {
+                header('Location: ?controller=user&action=index');
+                exit;
+            }
+
+            echo 'No se pudo eliminar el usuario.';
+        } catch (PDOException $e) {
+            echo 'No se puede eliminar este usuario porque tiene registros asociados.';
+        }
+    }
+
+    // Compatibilidad con los nombres anteriores.
+    public function create()
+    {
+        $this->crear();
+    }
+
+    public function edit()
+    {
+        $this->editar();
+    }
+
+    public function update()
+    {
+        $this->actualizar();
     }
 }

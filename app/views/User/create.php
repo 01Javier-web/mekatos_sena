@@ -1,50 +1,97 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <title>Crear Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear usuario</title>
 </head>
 
 <body>
 
-    <h1>Crear Usuario</h1>
+    <h1>Crear usuario</h1>
 
     <form method="POST" action="?controller=user&action=guardar">
 
-        <label>ID Rol:</label>
-        <input type="number" name="id_rol" required>
+        <label for="id_rol">Rol:</label>
+
+        <select name="id_rol" id="id_rol" required>
+
+            <option value="">Selecciona un rol</option>
+
+            <?php foreach ($roles ?? [] as $rol): ?>
+
+                <option
+                    value="<?= htmlspecialchars((string) ($rol['id_rol'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                >
+                    <?= htmlspecialchars((string) ($rol['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                </option>
+
+            <?php endforeach; ?>
+
+        </select>
 
         <br><br>
 
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required>
+        <label for="nombre">Nombre:</label>
+
+        <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            required
+        >
 
         <br><br>
 
-        <label>Apellido:</label>
-        <input type="text" name="apellido" required>
+        <label for="apellido">Apellido:</label>
+
+        <input
+            type="text"
+            id="apellido"
+            name="apellido"
+            required
+        >
 
         <br><br>
 
-        <label>Correo:</label>
-        <input type="email" name="correo" required>
+        <label for="correo">Correo electrónico:</label>
+
+        <input
+            type="email"
+            id="correo"
+            name="correo"
+            required
+        >
 
         <br><br>
 
-        <label>Teléfono:</label>
-        <input type="text" name="telefono">
+        <label for="telefono">Teléfono:</label>
+
+        <input
+            type="text"
+            id="telefono"
+            name="telefono"
+        >
 
         <br><br>
 
-        <label>Contraseña:</label>
-        <input type="password" name="password" required>
+        <label for="password">Contraseña:</label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="new-password"
+            required
+        >
 
         <br><br>
 
-        <label>Estado:</label>
+        <label for="estado">Estado:</label>
 
-        <select name="estado">
+        <select name="estado" id="estado" required>
 
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
@@ -54,16 +101,14 @@
         <br><br>
 
         <button type="submit">
-            Guardar
+            Guardar usuario
         </button>
 
+        <a href="?controller=user&action=index">
+            Cancelar
+        </a>
+
     </form>
-
-    <br>
-
-    <a href="?controller=user&action=index">
-        Ver usuarios
-    </a>
 
 </body>
 

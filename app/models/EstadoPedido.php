@@ -13,6 +13,7 @@ class EstadoPedido
         $this->connection = $database->connect();
     }
 
+    // Consultar todos los estados.
     public function getAll()
     {
         $sql = "SELECT
@@ -26,6 +27,7 @@ class EstadoPedido
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar un estado por su ID.
     public function getById($id)
     {
         $sql = "SELECT
@@ -42,7 +44,8 @@ class EstadoPedido
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($nombre)
+    // Crear un estado de pedido.
+    public function crear($nombre)
     {
         $sql = "INSERT INTO estado_pedido
                     (nombre)
@@ -55,7 +58,8 @@ class EstadoPedido
         return $consulta->execute();
     }
 
-    public function update($id, $nombre)
+    // Actualizar un estado de pedido.
+    public function actualizar($id, $nombre)
     {
         $sql = "UPDATE estado_pedido
                 SET nombre = :nombre
@@ -66,5 +70,40 @@ class EstadoPedido
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
+    }
+
+    // Eliminar un estado si no tiene pedidos asociados.
+    public function eliminar($id)
+    {
+        $sqlVerificar = "SELECT COUNT(*)
+                         FROM pedido
+                         WHERE id_estado = :id";
+
+        $consultaVerificar = $this->connection->prepare($sqlVerificar);
+        $consultaVerificar->bindValue(':id', $id, PDO::PARAM_INT);
+        $consultaVerificar->execute();
+
+        if ((int) $consultaVerificar->fetchColumn() > 0) {
+            return false;
+        }
+
+        $sql = "DELETE FROM estado_pedido
+                WHERE id_estado = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad con los métodos anteriores.
+    public function create($nombre)
+    {
+        return $this->crear($nombre);
+    }
+
+    public function update($id, $nombre)
+    {
+        return $this->actualizar($id, $nombre);
     }
 }

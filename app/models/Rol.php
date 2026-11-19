@@ -13,6 +13,7 @@ class Rol
         $this->connection = $database->connect();
     }
 
+    // Consultar todos los roles.
     public function getAll()
     {
         $sql = "SELECT
@@ -27,6 +28,7 @@ class Rol
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar un rol por su ID.
     public function getById($id)
     {
         $sql = "SELECT
@@ -44,7 +46,8 @@ class Rol
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($nombre, $descripcion)
+    // Crear un rol.
+    public function crear($nombre, $descripcion)
     {
         $sql = "INSERT INTO rol
                     (nombre, descripcion)
@@ -59,7 +62,8 @@ class Rol
         return $consulta->execute();
     }
 
-    public function update($id, $nombre, $descripcion)
+    // Actualizar un rol.
+    public function actualizar($id, $nombre, $descripcion)
     {
         $sql = "UPDATE rol
                 SET
@@ -74,5 +78,28 @@ class Rol
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
+    }
+
+    // Eliminar un rol.
+    public function eliminar($id)
+    {
+        $sql = "DELETE FROM rol
+                WHERE id_rol = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad con los nombres anteriores.
+    public function create($nombre, $descripcion)
+    {
+        return $this->crear($nombre, $descripcion);
+    }
+
+    public function update($id, $nombre, $descripcion)
+    {
+        return $this->actualizar($id, $nombre, $descripcion);
     }
 }

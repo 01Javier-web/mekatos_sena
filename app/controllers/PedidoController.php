@@ -21,6 +21,7 @@ class PedidoController
         $this->modeloEstado = new EstadoPedido();
     }
 
+    // Mostrar todos los pedidos.
     public function index()
     {
         $pedidos = $this->model->getAll();
@@ -28,7 +29,8 @@ class PedidoController
         require_once __DIR__ . '/../views/Pedido/index.php';
     }
 
-    public function create()
+    // Mostrar formulario de creación.
+    public function crear()
     {
         $mesas = $this->modeloMesa->getAll();
         $usuarios = $this->modeloUsuario->getAll();
@@ -37,6 +39,7 @@ class PedidoController
         require_once __DIR__ . '/../views/Pedido/create.php';
     }
 
+    // Guardar un nuevo pedido.
     public function guardar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -44,9 +47,20 @@ class PedidoController
             return;
         }
 
-        $id_mesa = filter_var($_POST['id_mesa'] ?? '', FILTER_VALIDATE_INT);
-        $id_usuario = filter_var($_POST['id_usuario'] ?? '', FILTER_VALIDATE_INT);
-        $id_estado = filter_var($_POST['id_estado'] ?? '', FILTER_VALIDATE_INT);
+        $id_mesa = filter_var(
+            $_POST['id_mesa'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $id_usuario = filter_var(
+            $_POST['id_usuario'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $id_estado = filter_var(
+            $_POST['id_estado'] ?? '',
+            FILTER_VALIDATE_INT
+        );
 
         $fecha_pedido = trim($_POST['fecha_pedido'] ?? '');
         $subtotal = $_POST['subtotal'] ?? '';
@@ -75,7 +89,7 @@ class PedidoController
 
         $fecha_pedido = str_replace('T', ' ', $fecha_pedido);
 
-        $resultado = $this->model->create(
+        $resultado = $this->model->crear(
             $id_mesa,
             $id_usuario,
             $id_estado,
@@ -94,9 +108,13 @@ class PedidoController
         echo 'Error al guardar el pedido.';
     }
 
+    // Mostrar formulario de edición.
     public function editar()
     {
-        $id = filter_var($_GET['id'] ?? '', FILTER_VALIDATE_INT);
+        $id = filter_var(
+            $_GET['id'] ?? '',
+            FILTER_VALIDATE_INT
+        );
 
         if (!$id || $id < 1) {
             echo 'El identificador del pedido no es válido.';
@@ -114,9 +132,10 @@ class PedidoController
         $usuarios = $this->modeloUsuario->getAll();
         $estados = $this->modeloEstado->getAll();
 
-        require __DIR__ . '/../views/Pedido/editar.php';
+        require_once __DIR__ . '/../views/Pedido/editar.php';
     }
 
+    // Actualizar un pedido.
     public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -124,10 +143,25 @@ class PedidoController
             return;
         }
 
-        $id = filter_var($_POST['id_pedido'] ?? '', FILTER_VALIDATE_INT);
-        $id_mesa = filter_var($_POST['id_mesa'] ?? '', FILTER_VALIDATE_INT);
-        $id_usuario = filter_var($_POST['id_usuario'] ?? '', FILTER_VALIDATE_INT);
-        $id_estado = filter_var($_POST['id_estado'] ?? '', FILTER_VALIDATE_INT);
+        $id = filter_var(
+            $_POST['id_pedido'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $id_mesa = filter_var(
+            $_POST['id_mesa'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $id_usuario = filter_var(
+            $_POST['id_usuario'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        $id_estado = filter_var(
+            $_POST['id_estado'] ?? '',
+            FILTER_VALIDATE_INT
+        );
 
         $fecha_pedido = trim($_POST['fecha_pedido'] ?? '');
         $subtotal = $_POST['subtotal'] ?? '';
@@ -166,7 +200,7 @@ class PedidoController
 
         $fecha_pedido = str_replace('T', ' ', $fecha_pedido);
 
-        $resultado = $this->model->update(
+        $resultado = $this->model->actualizar(
             $id,
             $id_mesa,
             $id_usuario,
@@ -184,5 +218,58 @@ class PedidoController
         }
 
         echo 'Error al actualizar el pedido.';
+    }
+
+    // Eliminar un pedido.
+    public function eliminar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_pedido'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del pedido no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró el pedido que deseas eliminar.';
+            return;
+        }
+
+        try {
+            $resultado = $this->model->eliminar($id);
+
+            if ($resultado) {
+                header('Location: ?controller=pedido&action=index');
+                exit;
+            }
+
+            echo 'No se puede eliminar este pedido porque tiene detalles o facturas asociados.';
+        } catch (PDOException $e) {
+            echo 'No se puede eliminar el pedido porque tiene registros relacionados.';
+        }
+    }
+
+    // Compatibilidad con los nombres anteriores.
+    public function create()
+    {
+        $this->crear();
+    }
+
+    public function edit()
+    {
+        $this->editar();
+    }
+
+    public function update()
+    {
+        $this->actualizar();
     }
 }

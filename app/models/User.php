@@ -13,6 +13,7 @@ class User
         $this->connection = $database->connect();
     }
 
+    // Consultar todos los usuarios con su respectivo rol.
     public function getAll()
     {
         $sql = "SELECT
@@ -34,6 +35,7 @@ class User
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar un usuario por su ID.
     public function getById($id)
     {
         $sql = "SELECT
@@ -55,7 +57,8 @@ class User
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create(
+    // Crear un usuario.
+    public function crear(
         $id_rol,
         $nombre,
         $apellido,
@@ -98,7 +101,8 @@ class User
         return $consulta->execute();
     }
 
-    public function update(
+    // Actualizar un usuario.
+    public function actualizar(
         $id,
         $id_rol,
         $nombre,
@@ -146,5 +150,60 @@ class User
         }
 
         return $consulta->execute();
+    }
+
+    // Eliminar un usuario.
+    public function eliminar($id)
+    {
+        $sql = "DELETE FROM usuario
+                WHERE id_usuario = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad con los nombres anteriores.
+    public function create(
+        $id_rol,
+        $nombre,
+        $apellido,
+        $correo,
+        $telefono,
+        $password,
+        $estado
+    ) {
+        return $this->crear(
+            $id_rol,
+            $nombre,
+            $apellido,
+            $correo,
+            $telefono,
+            $password,
+            $estado
+        );
+    }
+
+    public function update(
+        $id,
+        $id_rol,
+        $nombre,
+        $apellido,
+        $correo,
+        $telefono,
+        $password,
+        $estado
+    ) {
+        return $this->actualizar(
+            $id,
+            $id_rol,
+            $nombre,
+            $apellido,
+            $correo,
+            $telefono,
+            $password,
+            $estado
+        );
     }
 }

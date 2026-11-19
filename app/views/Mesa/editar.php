@@ -12,7 +12,7 @@
 
     <h1>Editar mesa</h1>
 
-    <form method="POST" action="?controller=mesa&action=update">
+    <form method="POST" action="?controller=mesa&action=actualizar">
 
         <input
             type="hidden"
@@ -23,7 +23,7 @@
         <label for="numero">Número de mesa:</label>
 
         <input
-            type="text"
+            type="number"
             id="numero"
             name="numero"
             value="<?= htmlspecialchars((string) ($mesa['numero'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
@@ -65,19 +65,30 @@
             </option>
 
             <option
-                value="Inactiva"
-                <?= ($mesa['estado'] ?? '') === 'Inactiva' ? 'selected' : '' ?>
+                value="Reservada"
+                <?= ($mesa['estado'] ?? '') === 'Reservada' ? 'selected' : '' ?>
             >
-                Inactiva
+                Reservada
+            </option>
+
+            <option
+                value="Fuera de servicio"
+                <?= ($mesa['estado'] ?? '') === 'Fuera de servicio' ? 'selected' : '' ?>
+            >
+                Fuera de servicio
             </option>
 
         </select>
 
         <br><br>
 
-        <button type="submit">Guardar cambios</button>
+        <button type="submit">
+            Guardar cambios
+        </button>
 
-        <a href="?controller=mesa&action=index">Cancelar</a>
+        <a href="?controller=mesa&action=index">
+            Cancelar
+        </a>
 
     </form>
 

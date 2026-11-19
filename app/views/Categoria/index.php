@@ -1,3 +1,6 @@
+<?php
+$categorias = $categorias ?? [];
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +15,7 @@
 
     <h1>Lista de Categorías</h1>
 
-    <a href="?controller=categoria&action=create">
+    <a href="?controller=categoria&action=crear">
         Crear categoría
     </a>
 
@@ -32,19 +35,17 @@
 
         <tbody>
 
-            <?php $categorias = $categorias ?? []; ?>
-
-            <?php if ($categorias): ?>
+            <?php if (!empty($categorias)): ?>
 
                 <?php foreach ($categorias as $categoria): ?>
 
                     <tr>
                         <td>
-                            <?= htmlspecialchars((string) ($categoria['id_categoria'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                            <?= htmlspecialchars((string) $categoria['id_categoria'], ENT_QUOTES, 'UTF-8') ?>
                         </td>
 
                         <td>
-                            <?= htmlspecialchars((string) ($categoria['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                            <?= htmlspecialchars((string) $categoria['nombre'], ENT_QUOTES, 'UTF-8') ?>
                         </td>
 
                         <td>
@@ -52,13 +53,36 @@
                         </td>
 
                         <td>
-                            <?= htmlspecialchars((string) ($categoria['estado'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                            <?= htmlspecialchars((string) $categoria['estado'], ENT_QUOTES, 'UTF-8') ?>
                         </td>
 
                         <td>
-                            <a href="?controller=categoria&action=edit&id=<?= urlencode((string) ($categoria['id_categoria'] ?? '')) ?>">
+
+                            <a href="?controller=categoria&action=editar&id=<?= urlencode((string) $categoria['id_categoria']) ?>">
                                 Editar
                             </a>
+
+                            |
+
+                            <form
+                                method="POST"
+                                action="?controller=categoria&action=eliminar"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="id_categoria"
+                                    value="<?= htmlspecialchars((string) $categoria['id_categoria'], ENT_QUOTES, 'UTF-8') ?>"
+                                >
+
+                                <button type="submit">
+                                    Eliminar
+                                </button>
+
+                            </form>
+
                         </td>
                     </tr>
 
@@ -67,7 +91,9 @@
             <?php else: ?>
 
                 <tr>
-                    <td colspan="5">No hay categorías registradas.</td>
+                    <td colspan="5">
+                        No hay categorías registradas.
+                    </td>
                 </tr>
 
             <?php endif; ?>
@@ -75,6 +101,12 @@
         </tbody>
 
     </table>
+
+    <br>
+
+    <a href="index.php">
+        Volver al inicio
+    </a>
 
 </body>
 

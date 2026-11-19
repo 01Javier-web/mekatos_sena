@@ -1,4 +1,8 @@
 
+<?php
+$productos = $productos ?? [];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,7 +16,7 @@
 
     <h1>Lista de Productos</h1>
 
-    <a href="?controller=producto&action=create">
+    <a href="?controller=producto&action=crear">
         Crear producto
     </a>
 
@@ -34,11 +38,12 @@
 
         <tbody>
 
-            <?php if ($productos ?? []): ?>
+            <?php if (!empty($productos)): ?>
 
-                <?php foreach ($productos ??[] as $producto): ?>
+                <?php foreach ($productos as $producto): ?>
 
                     <tr>
+
                         <td>
                             <?= htmlspecialchars((string) ($producto['id_producto'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                         </td>
@@ -64,10 +69,34 @@
                         </td>
 
                         <td>
-                            <a href="?controller=producto&action=edit&id=<?= urlencode((string) ($producto['id_producto'] ?? '')) ?>">
+
+                            <a href="?controller=producto&action=editar&id=<?= urlencode((string) $producto['id_producto']) ?>">
                                 Editar
                             </a>
+
+                            |
+
+                            <form
+                                method="POST"
+                                action="?controller=producto&action=eliminar"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Estás seguro de eliminar este producto?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="id_producto"
+                                    value="<?= htmlspecialchars((string) $producto['id_producto'], ENT_QUOTES, 'UTF-8') ?>"
+                                >
+
+                                <button type="submit">
+                                    Eliminar
+                                </button>
+
+                            </form>
+
                         </td>
+
                     </tr>
 
                 <?php endforeach; ?>
@@ -85,6 +114,12 @@
         </tbody>
 
     </table>
+
+    <br>
+
+    <a href="index.php">
+        Volver al inicio
+    </a>
 
 </body>
 

@@ -12,7 +12,7 @@
 
     <h1>Editar rol</h1>
 
-    <form method="POST" action="?controller=rol&action=update">
+    <form method="POST" action="?controller=rol&action=actualizar">
 
         <input
             type="hidden"
@@ -41,9 +41,13 @@
 
         <br><br>
 
-        <button type="submit">Guardar cambios</button>
+        <button type="submit">
+            Guardar cambios
+        </button>
 
-        <a href="?controller=rol&action=index">Cancelar</a>
+        <a href="?controller=rol&action=index">
+            Cancelar
+        </a>
 
     </form>
 

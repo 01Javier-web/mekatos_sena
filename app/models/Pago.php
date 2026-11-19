@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__ . '/../../config/database.php';
@@ -12,6 +13,7 @@ class Pago
         $this->connection = $database->connect();
     }
 
+    // Obtener todos los pagos
     public function getAll()
     {
         $sql = "SELECT
@@ -36,7 +38,29 @@ class Pago
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create(
+    // Obtener un pago por su ID
+    public function getById($id)
+    {
+        $sql = "SELECT
+                    id_pago,
+                    id_factura,
+                    id_metodo_pago,
+                    valor,
+                    referencia,
+                    fecha_pago,
+                    estado
+                FROM pago
+                WHERE id_pago = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Crear un pago
+    public function crear(
         $id_factura,
         $id_metodo_pago,
         $valor,
@@ -44,24 +68,21 @@ class Pago
         $fecha_pago,
         $estado
     ) {
-        $sql = "INSERT INTO pago
-                    (
-                        id_factura,
-                        id_metodo_pago,
-                        valor,
-                        referencia,
-                        fecha_pago,
-                        estado
-                    )
-                VALUES
-                    (
-                        :id_factura,
-                        :id_metodo_pago,
-                        :valor,
-                        :referencia,
-                        :fecha_pago,
-                        :estado
-                    )";
+        $sql = "INSERT INTO pago (
+                    id_factura,
+                    id_metodo_pago,
+                    valor,
+                    referencia,
+                    fecha_pago,
+                    estado
+                ) VALUES (
+                    :id_factura,
+                    :id_metodo_pago,
+                    :valor,
+                    :referencia,
+                    :fecha_pago,
+                    :estado
+                )";
 
         $consulta = $this->connection->prepare($sql);
 
@@ -73,5 +94,87 @@ class Pago
         $consulta->bindParam(':estado', $estado);
 
         return $consulta->execute();
+    }
+
+    // Actualizar un pago
+    public function actualizar(
+        $id,
+        $id_factura,
+        $id_metodo_pago,
+        $valor,
+        $referencia,
+        $fecha_pago,
+        $estado
+    ) {
+        $sql = "UPDATE pago SET
+                    id_factura = :id_factura,
+                    id_metodo_pago = :id_metodo_pago,
+                    valor = :valor,
+                    referencia = :referencia,
+                    fecha_pago = :fecha_pago,
+                    estado = :estado
+                WHERE id_pago = :id";
+
+        $consulta = $this->connection->prepare($sql);
+
+        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+        $consulta->bindParam(':id_factura', $id_factura);
+        $consulta->bindParam(':id_metodo_pago', $id_metodo_pago);
+        $consulta->bindParam(':valor', $valor);
+        $consulta->bindParam(':referencia', $referencia);
+        $consulta->bindParam(':fecha_pago', $fecha_pago);
+        $consulta->bindParam(':estado', $estado);
+
+        return $consulta->execute();
+    }
+
+    // Eliminar un pago
+    public function eliminar($id)
+    {
+        $sql = "DELETE FROM pago WHERE id_pago = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Métodos de compatibilidad
+    public function create(
+        $id_factura,
+        $id_metodo_pago,
+        $valor,
+        $referencia,
+        $fecha_pago,
+        $estado
+    ) {
+        return $this->crear(
+            $id_factura,
+            $id_metodo_pago,
+            $valor,
+            $referencia,
+            $fecha_pago,
+            $estado
+        );
+    }
+
+    public function update(
+        $id,
+        $id_factura,
+        $id_metodo_pago,
+        $valor,
+        $referencia,
+        $fecha_pago,
+        $estado
+    ) {
+        return $this->actualizar(
+            $id,
+            $id_factura,
+            $id_metodo_pago,
+            $valor,
+            $referencia,
+            $fecha_pago,
+            $estado
+        );
     }
 }

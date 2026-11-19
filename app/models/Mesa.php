@@ -13,6 +13,7 @@ class Mesa
         $this->connection = $database->connect();
     }
 
+    // Consultar todas las mesas.
     public function getAll()
     {
         $sql = "SELECT
@@ -28,6 +29,7 @@ class Mesa
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar una mesa por su ID.
     public function getById($id)
     {
         $sql = "SELECT
@@ -46,7 +48,8 @@ class Mesa
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($numero, $capacidad, $estado)
+    // Crear una mesa.
+    public function crear($numero, $capacidad, $estado)
     {
         $sql = "INSERT INTO mesa
                     (numero, capacidad, estado)
@@ -56,13 +59,14 @@ class Mesa
         $consulta = $this->connection->prepare($sql);
 
         $consulta->bindValue(':numero', $numero);
-        $consulta->bindValue(':capacidad', $capacidad);
+        $consulta->bindValue(':capacidad', $capacidad, PDO::PARAM_INT);
         $consulta->bindValue(':estado', $estado);
 
         return $consulta->execute();
     }
 
-    public function update($id, $numero, $capacidad, $estado)
+    // Actualizar una mesa.
+    public function actualizar($id, $numero, $capacidad, $estado)
     {
         $sql = "UPDATE mesa
                 SET
@@ -74,10 +78,45 @@ class Mesa
         $consulta = $this->connection->prepare($sql);
 
         $consulta->bindValue(':numero', $numero);
-        $consulta->bindValue(':capacidad', $capacidad);
+        $consulta->bindValue(':capacidad', $capacidad, PDO::PARAM_INT);
         $consulta->bindValue(':estado', $estado);
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
+    }
+
+    // Eliminar una mesa si no tiene pedidos asociados.
+    public function eliminar($id)
+    {
+        $sqlVerificar = "SELECT COUNT(*)
+                         FROM pedido
+                         WHERE id_mesa = :id";
+
+        $consultaVerificar = $this->connection->prepare($sqlVerificar);
+        $consultaVerificar->bindValue(':id', $id, PDO::PARAM_INT);
+        $consultaVerificar->execute();
+
+        if ((int) $consultaVerificar->fetchColumn() > 0) {
+            return false;
+        }
+
+        $sql = "DELETE FROM mesa
+                WHERE id_mesa = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad temporal con el código anterior.
+    public function create($numero, $capacidad, $estado)
+    {
+        return $this->crear($numero, $capacidad, $estado);
+    }
+
+    public function update($id, $numero, $capacidad, $estado)
+    {
+        return $this->actualizar($id, $numero, $capacidad, $estado);
     }
 }

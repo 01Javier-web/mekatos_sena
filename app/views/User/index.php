@@ -12,7 +12,7 @@
 
     <h1>Lista de Usuarios</h1>
 
-    <a href="?controller=user&action=create">
+    <a href="?controller=user&action=crear">
         Crear usuario
     </a>
 
@@ -37,11 +37,12 @@
 
             <?php $usuarios = $usuarios ?? []; ?>
 
-            <?php if ($usuarios): ?>
+            <?php if (!empty($usuarios)): ?>
 
                 <?php foreach ($usuarios as $usuario): ?>
 
                     <tr>
+
                         <td>
                             <?= htmlspecialchars((string) ($usuario['id_usuario'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                         </td>
@@ -71,10 +72,34 @@
                         </td>
 
                         <td>
-                            <a href="?controller=user&action=edit&id=<?= urlencode((string) ($usuario['id_usuario'] ?? '')) ?>">
+
+                            <a href="?controller=user&action=editar&id=<?= urlencode((string) ($usuario['id_usuario'] ?? '')) ?>">
                                 Editar
                             </a>
+
+                            |
+
+                            <form
+                                method="POST"
+                                action="?controller=user&action=eliminar"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="id_usuario"
+                                    value="<?= htmlspecialchars((string) ($usuario['id_usuario'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                >
+
+                                <button type="submit">
+                                    Eliminar
+                                </button>
+
+                            </form>
+
                         </td>
+
                     </tr>
 
                 <?php endforeach; ?>
@@ -82,7 +107,9 @@
             <?php else: ?>
 
                 <tr>
-                    <td colspan="8">No hay usuarios registrados.</td>
+                    <td colspan="8">
+                        No hay usuarios registrados.
+                    </td>
                 </tr>
 
             <?php endif; ?>
@@ -90,6 +117,12 @@
         </tbody>
 
     </table>
+
+    <br>
+
+    <a href="index.php">
+        Volver al inicio
+    </a>
 
 </body>
 

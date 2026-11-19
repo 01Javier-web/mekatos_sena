@@ -13,6 +13,7 @@ class Pedido
         $this->connection = $database->connect();
     }
 
+    // Consultar todos los pedidos.
     public function getAll()
     {
         $sql = "SELECT
@@ -42,6 +43,7 @@ class Pedido
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Consultar un pedido por su ID.
     public function getById($id)
     {
         $sql = "SELECT
@@ -65,7 +67,8 @@ class Pedido
         return $consulta->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create(
+    // Crear un pedido.
+    public function crear(
         $id_mesa,
         $id_usuario,
         $id_estado,
@@ -112,7 +115,8 @@ class Pedido
         return $consulta->execute();
     }
 
-    public function update(
+    // Actualizar un pedido.
+    public function actualizar(
         $id,
         $id_mesa,
         $id_usuario,
@@ -148,5 +152,91 @@ class Pedido
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $consulta->execute();
+    }
+
+    // Eliminar un pedido si no tiene registros asociados.
+    public function eliminar($id)
+    {
+        // Verificar detalles del pedido.
+        $sqlDetalles = "SELECT COUNT(*)
+                        FROM detalle_pedido
+                        WHERE id_pedido = :id";
+
+        $consultaDetalles = $this->connection->prepare($sqlDetalles);
+        $consultaDetalles->bindValue(':id', $id, PDO::PARAM_INT);
+        $consultaDetalles->execute();
+
+        if ((int) $consultaDetalles->fetchColumn() > 0) {
+            return false;
+        }
+
+        // Verificar facturas asociadas.
+        $sqlFacturas = "SELECT COUNT(*)
+                        FROM factura
+                        WHERE id_pedido = :id";
+
+        $consultaFacturas = $this->connection->prepare($sqlFacturas);
+        $consultaFacturas->bindValue(':id', $id, PDO::PARAM_INT);
+        $consultaFacturas->execute();
+
+        if ((int) $consultaFacturas->fetchColumn() > 0) {
+            return false;
+        }
+
+        // Eliminar el pedido.
+        $sql = "DELETE FROM pedido
+                WHERE id_pedido = :id";
+
+        $consulta = $this->connection->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $consulta->execute();
+    }
+
+    // Compatibilidad con los métodos anteriores.
+    public function create(
+        $id_mesa,
+        $id_usuario,
+        $id_estado,
+        $fecha_pedido,
+        $subtotal,
+        $descuento,
+        $total,
+        $observaciones
+    ) {
+        return $this->crear(
+            $id_mesa,
+            $id_usuario,
+            $id_estado,
+            $fecha_pedido,
+            $subtotal,
+            $descuento,
+            $total,
+            $observaciones
+        );
+    }
+
+    public function update(
+        $id,
+        $id_mesa,
+        $id_usuario,
+        $id_estado,
+        $fecha_pedido,
+        $subtotal,
+        $descuento,
+        $total,
+        $observaciones
+    ) {
+        return $this->actualizar(
+            $id,
+            $id_mesa,
+            $id_usuario,
+            $id_estado,
+            $fecha_pedido,
+            $subtotal,
+            $descuento,
+            $total,
+            $observaciones
+        );
     }
 }

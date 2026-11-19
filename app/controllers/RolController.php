@@ -12,6 +12,7 @@ class RolController
         $this->model = new Rol();
     }
 
+    // Mostrar todos los roles.
     public function index()
     {
         $roles = $this->model->getAll();
@@ -19,11 +20,13 @@ class RolController
         require_once __DIR__ . '/../views/Rol/index.php';
     }
 
-    public function create()
+    // Mostrar formulario de creación.
+    public function crear()
     {
         require_once __DIR__ . '/../views/Rol/create.php';
     }
 
+    // Guardar un nuevo rol.
     public function guardar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -39,7 +42,7 @@ class RolController
             return;
         }
 
-        $resultado = $this->model->create(
+        $resultado = $this->model->crear(
             $nombre,
             $descripcion
         );
@@ -52,7 +55,8 @@ class RolController
         echo 'Error al guardar el rol.';
     }
 
-    public function edit()
+    // Mostrar formulario de edición.
+    public function editar()
     {
         $id = filter_var(
             $_GET['id'] ?? '',
@@ -71,10 +75,11 @@ class RolController
             return;
         }
 
-        require_once __DIR__ . '/../views/Rol/edit.php';
+        require_once __DIR__ . '/../views/Rol/editar.php';
     }
 
-    public function update()
+    // Actualizar un rol.
+    public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->index();
@@ -104,7 +109,7 @@ class RolController
             return;
         }
 
-        $resultado = $this->model->update(
+        $resultado = $this->model->actualizar(
             $id,
             $nombre,
             $descripcion
@@ -116,5 +121,58 @@ class RolController
         }
 
         echo 'Error al actualizar el rol.';
+    }
+
+    // Eliminar un rol.
+    public function eliminar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_rol'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del rol no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró el rol que deseas eliminar.';
+            return;
+        }
+
+        try {
+            $resultado = $this->model->eliminar($id);
+
+            if ($resultado) {
+                header('Location: ?controller=rol&action=index');
+                exit;
+            }
+
+            echo 'No se pudo eliminar el rol.';
+        } catch (PDOException $e) {
+            echo 'No se puede eliminar este rol porque tiene registros asociados.';
+        }
+    }
+
+    // Compatibilidad con los nombres anteriores.
+    public function create()
+    {
+        $this->crear();
+    }
+
+    public function edit()
+    {
+        $this->editar();
+    }
+
+    public function update()
+    {
+        $this->actualizar();
     }
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 require_once __DIR__ . '/../models/Categoria.php';
@@ -12,6 +11,7 @@ class CategoriaController
         $this->model = new Categoria();
     }
 
+    // Consultar todas las categorías.
     public function index()
     {
         $categorias = $this->model->getAll();
@@ -19,11 +19,13 @@ class CategoriaController
         require_once __DIR__ . '/../views/Categoria/index.php';
     }
 
-    public function create()
+    // Mostrar formulario para crear una categoría.
+    public function crear()
     {
         require_once __DIR__ . '/../views/Categoria/create.php';
     }
 
+    // Guardar una nueva categoría.
     public function guardar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -43,7 +45,7 @@ class CategoriaController
             return;
         }
 
-        $resultado = $this->model->create(
+        $resultado = $this->model->crear(
             $nombre,
             $descripcion,
             $estado
@@ -57,7 +59,8 @@ class CategoriaController
         echo 'Error al guardar la categoría.';
     }
 
-    public function edit()
+    // Mostrar formulario para editar una categoría.
+    public function editar()
     {
         $id = filter_var(
             $_GET['id'] ?? '',
@@ -76,10 +79,11 @@ class CategoriaController
             return;
         }
 
-        require_once __DIR__ . '/../views/Categoria/edit.php';
+        require_once __DIR__ . '/../views/Categoria/editar.php';
     }
 
-    public function update()
+    // Actualizar una categoría existente.
+    public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->index();
@@ -113,7 +117,7 @@ class CategoriaController
             return;
         }
 
-        $resultado = $this->model->update(
+        $resultado = $this->model->actualizar(
             $id,
             $nombre,
             $descripcion,
@@ -126,5 +130,38 @@ class CategoriaController
         }
 
         echo 'Error al actualizar la categoría.';
+    }
+
+    // Eliminar una categoría.
+    public function eliminar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_categoria'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador de la categoría no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró la categoría que deseas eliminar.';
+            return;
+        }
+
+        $resultado = $this->model->eliminar($id);
+
+        if ($resultado) {
+            header('Location: ?controller=categoria&action=index');
+            exit;
+        }
+
+        echo 'No se puede eliminar esta categoría porque tiene productos asociados.';
     }
 }

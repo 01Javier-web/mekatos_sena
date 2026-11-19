@@ -1,3 +1,6 @@
+<?php
+$categoria = $categoria ?? [];
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +15,7 @@
 
     <h1>Editar categoría</h1>
 
-    <form method="POST" action="?controller=categoria&action=update">
+    <form method="POST" action="?controller=categoria&action=actualizar">
 
         <input
             type="hidden"

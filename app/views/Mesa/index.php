@@ -12,7 +12,7 @@
 
     <h1>Lista de Mesas</h1>
 
-    <a href="?controller=mesa&action=create">
+    <a href="?controller=mesa&action=crear">
         Crear mesa
     </a>
 
@@ -34,11 +34,12 @@
 
             <?php $mesas = $mesas ?? []; ?>
 
-            <?php if ($mesas): ?>
+            <?php if (!empty($mesas)): ?>
 
                 <?php foreach ($mesas as $mesa): ?>
 
                     <tr>
+
                         <td>
                             <?= htmlspecialchars((string) ($mesa['id_mesa'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                         </td>
@@ -56,10 +57,34 @@
                         </td>
 
                         <td>
-                            <a href="?controller=mesa&action=edit&id=<?= urlencode((string) ($mesa['id_mesa'] ?? '')) ?>">
+
+                            <a href="?controller=mesa&action=editar&id=<?= urlencode((string) ($mesa['id_mesa'] ?? '')) ?>">
                                 Editar
                             </a>
+
+                            |
+
+                            <form
+                                method="POST"
+                                action="?controller=mesa&action=eliminar"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Estás seguro de eliminar esta mesa?');"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="id_mesa"
+                                    value="<?= htmlspecialchars((string) ($mesa['id_mesa'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                >
+
+                                <button type="submit">
+                                    Eliminar
+                                </button>
+
+                            </form>
+
                         </td>
+
                     </tr>
 
                 <?php endforeach; ?>
@@ -67,7 +92,9 @@
             <?php else: ?>
 
                 <tr>
-                    <td colspan="5">No hay mesas registradas.</td>
+                    <td colspan="5">
+                        No hay mesas registradas.
+                    </td>
                 </tr>
 
             <?php endif; ?>
@@ -75,6 +102,12 @@
         </tbody>
 
     </table>
+
+    <br>
+
+    <a href="index.php">
+        Volver al inicio
+    </a>
 
 </body>
 

@@ -12,6 +12,7 @@ class EstadoPedidoController
         $this->model = new EstadoPedido();
     }
 
+    // Mostrar todos los estados.
     public function index()
     {
         $estados = $this->model->getAll();
@@ -19,11 +20,13 @@ class EstadoPedidoController
         require_once __DIR__ . '/../views/EstadoPedido/index.php';
     }
 
-    public function create()
+    // Mostrar formulario de creación.
+    public function crear()
     {
         require_once __DIR__ . '/../views/EstadoPedido/create.php';
     }
 
+    // Guardar un nuevo estado.
     public function guardar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -38,7 +41,7 @@ class EstadoPedidoController
             return;
         }
 
-        $resultado = $this->model->create($nombre);
+        $resultado = $this->model->crear($nombre);
 
         if ($resultado) {
             header('Location: ?controller=estado_pedido&action=index');
@@ -48,7 +51,8 @@ class EstadoPedidoController
         echo 'Error al guardar el estado del pedido.';
     }
 
-    public function edit()
+    // Mostrar formulario de edición.
+    public function editar()
     {
         $id = filter_var(
             $_GET['id'] ?? '',
@@ -67,10 +71,11 @@ class EstadoPedidoController
             return;
         }
 
-        require_once __DIR__ . '/../views/EstadoPedido/edit.php';
+        require_once __DIR__ . '/../views/EstadoPedido/editar.php';
     }
 
-    public function update()
+    // Actualizar un estado.
+    public function actualizar()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->index();
@@ -99,7 +104,7 @@ class EstadoPedidoController
             return;
         }
 
-        $resultado = $this->model->update($id, $nombre);
+        $resultado = $this->model->actualizar($id, $nombre);
 
         if ($resultado) {
             header('Location: ?controller=estado_pedido&action=index');
@@ -107,5 +112,58 @@ class EstadoPedidoController
         }
 
         echo 'Error al actualizar el estado del pedido.';
+    }
+
+    // Eliminar un estado.
+    public function eliminar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->index();
+            return;
+        }
+
+        $id = filter_var(
+            $_POST['id_estado'] ?? '',
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$id || $id < 1) {
+            echo 'El identificador del estado no es válido.';
+            return;
+        }
+
+        if (!$this->model->getById($id)) {
+            echo 'No se encontró el estado que deseas eliminar.';
+            return;
+        }
+
+        try {
+            $resultado = $this->model->eliminar($id);
+
+            if ($resultado) {
+                header('Location: ?controller=estado_pedido&action=index');
+                exit;
+            }
+
+            echo 'No se puede eliminar este estado porque tiene pedidos asociados.';
+        } catch (PDOException $e) {
+            echo 'No se puede eliminar el estado porque tiene registros asociados.';
+        }
+    }
+
+    // Compatibilidad con las rutas anteriores.
+    public function create()
+    {
+        $this->crear();
+    }
+
+    public function edit()
+    {
+        $this->editar();
+    }
+
+    public function update()
+    {
+        $this->actualizar();
     }
 }

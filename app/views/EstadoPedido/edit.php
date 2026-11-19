@@ -12,7 +12,7 @@
 
     <h1>Editar estado del pedido</h1>
 
-    <form method="POST" action="?controller=estado_pedido&action=update">
+    <form method="POST" action="?controller=estado_pedido&action=actualizar">
 
         <input
             type="hidden"
@@ -32,9 +32,13 @@
 
         <br><br>
 
-        <button type="submit">Guardar cambios</button>
+        <button type="submit">
+            Guardar cambios
+        </button>
 
-        <a href="?controller=estado_pedido&action=index">Cancelar</a>
+        <a href="?controller=estado_pedido&action=index">
+            Cancelar
+        </a>
 
     </form>
 

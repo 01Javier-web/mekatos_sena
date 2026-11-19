@@ -1,4 +1,9 @@
 
+<?php
+$producto = $producto ?? [];
+$categorias = $categorias ?? [];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,7 +17,7 @@
 
     <h1>Editar producto</h1>
 
-    <form method="POST" action="?controller=producto&action=update">
+    <form method="POST" action="?controller=producto&action=actualizar">
 
         <input
             type="hidden"
@@ -23,15 +28,18 @@
         <label for="id_categoria">Categoría:</label>
 
         <select name="id_categoria" id="id_categoria" required>
+
             <option value="">Selecciona una categoría</option>
 
-            <?php foreach (($categorias ?? []) as $categoria): ?>
+            <?php foreach ($categorias as $categoria): ?>
+
                 <option
                     value="<?= htmlspecialchars((string) ($categoria['id_categoria'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                     <?= (string) ($categoria['id_categoria'] ?? '') === (string) ($producto['id_categoria'] ?? '') ? 'selected' : '' ?>
                 >
                     <?= htmlspecialchars((string) ($categoria['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                 </option>
+
             <?php endforeach; ?>
 
         </select>
@@ -78,6 +86,7 @@
         <label for="estado">Estado:</label>
 
         <select name="estado" id="estado" required>
+
             <option
                 value="Disponible"
                 <?= ($producto['estado'] ?? '') === 'Disponible' ? 'selected' : '' ?>
@@ -91,6 +100,7 @@
             >
                 No disponible
             </option>
+
         </select>
 
         <br><br>

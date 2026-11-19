@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Factura</title>
 </head>
 
@@ -10,46 +12,102 @@
 
     <h1>Crear Factura</h1>
 
+    <?php
+    $pedidos = $pedidos ?? [];
+    ?>
+
     <form method="POST" action="?controller=factura&action=guardar">
 
-        <label>ID Pedido:</label>
-        <input type="number" name="id_pedido" required>
+        <label for="id_pedido">Pedido:</label>
+
+        <select name="id_pedido" id="id_pedido" required>
+
+            <option value="">Seleccione un pedido</option>
+
+            <?php foreach ($pedidos as $pedido): ?>
+
+                <option value="<?= htmlspecialchars((string) $pedido['id_pedido'], ENT_QUOTES, 'UTF-8') ?>">
+                    Pedido #<?= htmlspecialchars((string) $pedido['id_pedido'], ENT_QUOTES, 'UTF-8') ?>
+                    - Total: $<?= htmlspecialchars((string) ($pedido['total'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>
+                </option>
+
+            <?php endforeach; ?>
+
+        </select>
 
         <br><br>
 
-        <label>Número de Factura:</label>
-        <input type="text" name="numero_factura" required>
+        <label for="numero_factura">Número de Factura:</label>
+        <input
+            type="text"
+            name="numero_factura"
+            id="numero_factura"
+            required
+        >
 
         <br><br>
 
-        <label>Fecha de Emisión:</label>
-        <input type="datetime-local" name="fecha_emision" required>
+        <label for="fecha_emision">Fecha de Emisión:</label>
+        <input
+            type="datetime-local"
+            name="fecha_emision"
+            id="fecha_emision"
+            required
+        >
 
         <br><br>
 
-        <label>Subtotal:</label>
-        <input type="number" name="subtotal" step="0.01" required>
+        <label for="subtotal">Subtotal:</label>
+        <input
+            type="number"
+            name="subtotal"
+            id="subtotal"
+            step="0.01"
+            min="0"
+            required
+        >
 
         <br><br>
 
-        <label>Descuento:</label>
-        <input type="number" name="descuento" step="0.01" value="0">
+        <label for="descuento">Descuento:</label>
+        <input
+            type="number"
+            name="descuento"
+            id="descuento"
+            step="0.01"
+            min="0"
+            value="0"
+        >
 
         <br><br>
 
-        <label>Impuesto:</label>
-        <input type="number" name="impuesto" step="0.01" value="0">
+        <label for="impuesto">Impuesto:</label>
+        <input
+            type="number"
+            name="impuesto"
+            id="impuesto"
+            step="0.01"
+            min="0"
+            value="0"
+        >
 
         <br><br>
 
-        <label>Total:</label>
-        <input type="number" name="total" step="0.01" required>
+        <label for="total">Total:</label>
+        <input
+            type="number"
+            name="total"
+            id="total"
+            step="0.01"
+            min="0"
+            required
+        >
 
         <br><br>
 
-        <label>Estado:</label>
+        <label for="estado">Estado:</label>
 
-        <select name="estado">
+        <select name="estado" id="estado" required>
 
             <option value="Pendiente">Pendiente</option>
             <option value="Pagada">Pagada</option>
@@ -60,7 +118,7 @@
         <br><br>
 
         <button type="submit">
-            Guardar
+            Guardar factura
         </button>
 
     </form>
@@ -68,7 +126,7 @@
     <br>
 
     <a href="?controller=factura&action=index">
-        Ver facturas
+        Volver a facturas
     </a>
 
 </body>
