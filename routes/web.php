@@ -18,6 +18,7 @@ $rutas = [
 
         // Mesas
         "/mesas" => ["MesaController", "index"],
+        "/productos/json" => ["ProductoController", "listarJson"],
         "/mesas/crear" => ["MesaController", "crear"],
         "/mesas/editar" => ["MesaController", "editar"],
 

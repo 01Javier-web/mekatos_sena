@@ -15,6 +15,38 @@ if (
 
 $uri = '/' . trim($uri, '/');
 
+// Cargar las rutas del proyecto
+$rutas = require __DIR__ . '/../routes/web.php';
+
+// Buscar la ruta según el método HTTP y la URL
+if (isset($rutas[$method][$uri])) {
+
+    [$nombreControlador, $nombreMetodo] = $rutas[$method][$uri];
+
+    $archivoControlador = __DIR__ . '/../app/controllers/' . $nombreControlador . '.php';
+
+    if (file_exists($archivoControlador)) {
+
+        require_once $archivoControlador;
+
+        if (class_exists($nombreControlador)) {
+
+            $controlador = new $nombreControlador();
+
+            if (method_exists($controlador, $nombreMetodo)) {
+
+                $controlador->$nombreMetodo();
+                exit;
+
+            }
+        }
+    }
+
+    http_response_code(404);
+    echo "No se encontró el controlador o método solicitado.";
+    exit;
+}
+
 
 $rutaProcesada = false;
 
@@ -256,52 +288,3 @@ if (
 }
 
 
-// Cargar las rutas del proyecto
-$rutas = require_once __DIR__ . '/../routes/web.php';
-
-// Buscar la ruta según el método HTTP y la URL
-if (isset($rutas[$method][$uri])) {
-
-    // Obtener controlador y método
-    [$nombreControlador, $nombreMetodo] = $rutas[$method][$uri];
-
-    // Construir la ruta del archivo del controlador
-    $archivoControlador = __DIR__ . '/../app/controllers/' . $nombreControlador . '.php';
-
-    // Comprobar que exista el archivo
-    if (file_exists($archivoControlador)) {
-
-        require_once $archivoControlador;
-
-        // Comprobar que exista la clase
-        if (class_exists($nombreControlador)) {
-
-            // Crear instancia del controlador
-            $controlador = new $nombreControlador();
-
-            // Comprobar que exista el método
-            if (method_exists($controlador, $nombreMetodo)) {
-
-                // Ejecutar el método correspondiente
-                $controlador->$nombreMetodo();
-
-                exit;
-
-            } else {
-                http_response_code(404);
-                echo "La acción solicitada no existe.";
-                exit;
-            }
-
-        } else {
-            http_response_code(500);
-            echo "No se encontró la clase del controlador.";
-            exit;
-        }
-
-    } else {
-        http_response_code(500);
-        echo "No se encontró el archivo del controlador.";
-        exit;
-    }
-}
