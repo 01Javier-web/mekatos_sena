@@ -6,6 +6,8 @@ $rutas = [
     // RUTAS GET
     "GET" => [
 
+        "/" => ["HomeController", "index"],
+
         // Categorías
         "/categorias" => ["CategoriaController", "index"],
         "/categorias/crear" => ["CategoriaController", "crear"],

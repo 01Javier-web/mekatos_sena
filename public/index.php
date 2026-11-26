@@ -1,3 +1,4 @@
+
 <?php
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -15,10 +16,8 @@ if (
 
 $uri = '/' . trim($uri, '/');
 
-// Cargar las rutas del proyecto
 $rutas = require __DIR__ . '/../routes/web.php';
 
-// Buscar la ruta según el método HTTP y la URL
 if (isset($rutas[$method][$uri])) {
 
     [$nombreControlador, $nombreMetodo] = $rutas[$method][$uri];
@@ -37,7 +36,6 @@ if (isset($rutas[$method][$uri])) {
 
                 $controlador->$nombreMetodo();
                 exit;
-
             }
         }
     }
@@ -46,7 +44,6 @@ if (isset($rutas[$method][$uri])) {
     echo "No se encontró el controlador o método solicitado.";
     exit;
 }
-
 
 $rutaProcesada = false;
 
@@ -64,7 +61,6 @@ switch ($uri) {
         }
 
         break;
-
 
     case '/productos/crear':
 
@@ -84,7 +80,6 @@ switch ($uri) {
 
         break;
 
-
     case '/productos/actualizar':
 
         require_once __DIR__ . '/../app/controllers/ProductoController.php';
@@ -98,7 +93,6 @@ switch ($uri) {
 
         break;
 
-
     case '/productos/eliminar':
 
         require_once __DIR__ . '/../app/controllers/ProductoController.php';
@@ -111,7 +105,6 @@ switch ($uri) {
         }
 
         break;
-
 
     case '/productos':
 
@@ -127,44 +120,7 @@ switch ($uri) {
         break;
 }
 
-
 if ($rutaProcesada) {
-    exit;
-}
-
-$modulos = [
-    'categoria' => 'Categorías',
-    'producto' => 'Productos',
-    'mesa' => 'Mesas',
-    'rol' => 'Roles',
-    'user' => 'Usuarios',
-    'estado_pedido' => 'Estados de pedido',
-    'pedido' => 'Pedidos',
-    'detalle_pedido' => 'Detalles de pedido',
-    'factura' => 'Facturas',
-    'pago' => 'Pagos'
-];
-
-if (
-    $uri === '/' &&
-    (!isset($_GET['controller']) || $_GET['controller'] === '')
-) {
-
-    echo '<h1>MEKATOS</h1>';
-    echo '<h2>Módulos del sistema</h2>';
-    echo '<ul>';
-
-    foreach ($modulos as $nombreControlador => $nombreModulo) {
-
-        echo '<li><a href="?controller='
-            . htmlspecialchars($nombreControlador, ENT_QUOTES, 'UTF-8')
-            . '&action=index">'
-            . htmlspecialchars($nombreModulo, ENT_QUOTES, 'UTF-8')
-            . '</a></li>';
-    }
-
-    echo '</ul>';
-
     exit;
 }
 
@@ -181,7 +137,6 @@ switch ($controller) {
 
         break;
 
-
     case 'mesa':
 
         require_once __DIR__ . '/../app/controllers/MesaController.php';
@@ -189,7 +144,6 @@ switch ($controller) {
         $controller = new MesaController();
 
         break;
-
 
     case 'producto':
 
@@ -199,7 +153,6 @@ switch ($controller) {
 
         break;
 
-
     case 'rol':
 
         require_once __DIR__ . '/../app/controllers/RolController.php';
@@ -207,7 +160,6 @@ switch ($controller) {
         $controller = new RolController();
 
         break;
-
 
     case 'user':
 
@@ -217,7 +169,6 @@ switch ($controller) {
 
         break;
 
-
     case 'estado_pedido':
 
         require_once __DIR__ . '/../app/controllers/EstadoPedidoController.php';
@@ -225,7 +176,6 @@ switch ($controller) {
         $controller = new EstadoPedidoController();
 
         break;
-
 
     case 'pedido':
 
@@ -235,7 +185,6 @@ switch ($controller) {
 
         break;
 
-
     case 'detalle_pedido':
 
         require_once __DIR__ . '/../app/controllers/DetallePedidoController.php';
@@ -243,7 +192,6 @@ switch ($controller) {
         $controller = new DetallePedidoController();
 
         break;
-
 
     case 'factura':
 
@@ -253,7 +201,6 @@ switch ($controller) {
 
         break;
 
-
     case 'pago':
 
         require_once __DIR__ . '/../app/controllers/PagoController.php';
@@ -262,13 +209,10 @@ switch ($controller) {
 
         break;
 
-
     default:
 
         http_response_code(404);
-
         echo 'Controlador no encontrado';
-
         exit;
 }
 
@@ -283,8 +227,5 @@ if (
 } else {
 
     http_response_code(404);
-
     echo 'Acción no encontrada';
 }
-
-
